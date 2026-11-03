@@ -129,12 +129,14 @@ int main()
 	cout << "=======================VUKAFIT MEMBERSHIP QUOTATION=========================="<<endl;
 	cout << "Student\t\t\t:" << studentName << " -" << studentNumber << endl;
 	cout << "Membership\t\t:" << selectedMembershipPlanName<<endl;
-	cout << "Months\t\t:" << membershipDuration << endl;
+	cout << "Months\t\t\t:" << membershipDuration << endl;
 	cout << "Monthly Fee\t\t:" << initialMonthlyRate << endl;
 	cout << "Subtotal\t\t:" << membershipSubtotal << endl;
 	cout << "Discount\t\t:" << discountAmount << endl;
 	cout << "Assessment\t\t:" << ASSESSMENT_FEE << endl;
 	cout << "FINAL AMOUNT\t\t:" << fullAmountDue;
+
+	/*Used the \t escape character to format the quotation display*/
 
 
 	//cout << "final amount due: " << fullAmountDue; 
