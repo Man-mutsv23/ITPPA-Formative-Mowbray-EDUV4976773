@@ -119,4 +119,36 @@ End Module
 | **TC 1.4** | 0% Discount Bracket Check (Tier 2, 2 Months, No Assessment) | Student No: `VF1020`<br>Name: `John Doe`<br>Tier: `2`<br>Months: `2`<br>Assessment: `N` | Tier: Active Plus<br>Monthly Fee: R350.00<br>Subtotal: R700.00<br>Discount (0%): R0.00<br>Assessment Fee: R0.00<br>Final Total: R700.00 | Matches Expected | **Pass** |
 | **TC 1.5** | Invalid Tier Code Boundary Trapping (`code ∉ 1..3`) | Student No: `VF1030`<br>Name: `Jane Smith`<br>Tier: `4` | Error message: Invalid membership tier code.<br>Immediate program termination. | Matches Expected | **Pass** |
 | **TC 1.6** | Duration Boundary Trapping (`months > 6`) | Student No: `VF1035`<br>Name: `Mike Ross`<br>Tier: `1`<br>Months: `7` | Error message: Duration must be between 1 and 6 months.<br>Immediate program termination. | Matches Expected | **Pass** |
+
+### 1.4. How to run the program
+
+Compile using any standard C++11 compliant compiler:
+
+GCC/MinGW (Command line method):
+**g++ -std=c++11 Question1/VukaFit_Quotation.cpp -o Question1/VukaFit_Quotation.exe
+./Question1/VukaFit_Quotation.exe**
+
+Visual Studio IDE:
+
+Press `Ctrl + Shift + B` to compile the project then `Ctrl +F5` to run it.
+
+### Step-by-Step Instructions
+
+1. Enter your Student Number and Full Name.
+
+2. Choose a membership tier: 1 (Basic Access, R220/mo), 2 (Active Plus, R350/mo), or 3 (Complete Wellness, R480/mo).
+
+3. Enter the duration in months (1 to 6):
+
+    6 months applies a 12% discount.
     
+    3–5 months applies a 7% discount.
+    
+    1–2 months receives no discount.
+
+4. Enter Y or N for the optional fitness assessment (adds R180.00 if it is selected).
+
+5. The application displays an itemized quotation invoice and exits.
+
+
+ 
