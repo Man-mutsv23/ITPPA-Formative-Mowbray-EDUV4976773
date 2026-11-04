@@ -20,9 +20,103 @@ The VukaFit Campus Wellness Management System is a modular C++ program built on 
 
 ### 1.2 Membership Quotation Algorithm and Pseudocode
 
+
 Module main()
-    //Declaring the main varia
-    Declare String studentNumber, studentName, membershipName
-    Declare Integer membershipCode, months
-    Declare Character assessmentChoice
-    Declare Real monthlyRate, subtotal, discount, assessmentFee, finalAmount
+
+    // Constant Declarations
+    Constant Real BASIC_ACCESS = 220.00
+    Constant Real ACTIVE_PLUS = 350.00
+    Constant Real COMPLETE_WELLNESS_RATE = 480.00
+    Constant Real DISCOUNT_3_TO_5_MONTHS = 0.07
+    Constant Real DISCOUNT_6_MONTHS = 0.12
+    Constant Real ASSESSMENT_FEE = 180.00
+
+    // Variable Declarations
+    Declare String studentNumber, studentName, selectedMembershipPlanName
+    Declare Integer membershipChoice, membershipDuration
+    Declare Character include_assessment
+    Declare Real initialMonthlyRate, membershipSubtotal, discountRate
+    Declare Real discountAmount, assessmentCharge, fullAmountDue
+
+    // Input Student Details
+    Display "Please enter your Student Number: "
+    Input studentNumber
+    Display "Please enter your full name: "
+    Input studentName
+
+    // Plan Selection
+    Display "Please select a Plan (1: Basic, 2: Active Plus, 3: Complete Wellness): "
+    Input membershipChoice
+
+    Select membershipChoice
+        Case 1:
+            Set selectedMembershipPlanName = "Basic Access"
+            Set initialMonthlyRate = BASIC_ACCESS
+        Case 2:
+            Set selectedMembershipPlanName = "Active Plus"
+            Set initialMonthlyRate = ACTIVE_PLUS
+        Case 3:
+            Set selectedMembershipPlanName = "Complete Wellness"
+            Set initialMonthlyRate = COMPLETE_WELLNESS_RATE
+        Default:
+            Display "Error: You have entered an invalid membership code"
+            Exit Module
+    End Select
+
+    // Duration Input and Validation
+    Display "May you select the duration you'd like to sign up for (1-6): "
+    Input membershipDuration
+
+    If membershipDuration < 1 Or membershipDuration > 6 Then
+        Display "Error: Duration must be between 1 and 6 months"
+        Exit Module
+    Else
+        Set membershipSubtotal = initialMonthlyRate * membershipDuration
+    End If
+
+    // Discount Calculation
+    If membershipDuration == 6 Then
+        Set discountRate = DISCOUNT_6_MONTHS
+    Else If membershipDuration >= 3 Then
+        Set discountRate = DISCOUNT_3_TO_5_MONTHS
+    Else
+        Set discountRate = 0.00
+    End If
+
+    Set discountAmount = membershipSubtotal * discountRate
+
+    // Optional Assessment
+    Display "Would you require a fitness assessment as well? (Y/N): "
+    Input include_assessment
+
+    If ToLower(include_assessment) == 'y' Then
+        Set assessmentCharge = ASSESSMENT_FEE
+    Else
+        Set assessmentCharge = 0.00
+    End If
+
+    // Final Total Calculation
+    Set fullAmountDue = membershipSubtotal - discountAmount + assessmentCharge
+
+    // Output Invoice Breakdown
+    Display "======================= VUKAFIT MEMBERSHIP QUOTATION =========================="
+    Display "Student        : ", studentName, " - ", studentNumber
+    Display "Membership     : ", selectedMembershipPlanName
+    Display "Months         : ", membershipDuration
+    Display "Monthly Fee    : R", initialMonthlyRate
+    Display "Subtotal       : R", membershipSubtotal
+    Display "Discount       : R", discountAmount
+    Display "Assessment     : R", assessmentCharge
+    Display "FINAL AMOUNT   : R", fullAmountDue
+End Module
+
+#### 1.3. Test Execution Table
+| Test Case | Scenario / Logic Tested | Inputs | Expected Output | Actual Output | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC 1.1** | Tier 3, 6-Month Commitment with Assessment *(Mandatory Minimum Case)* | Student No: `VF1008`<br>Name: `Thapelo Gama`<br>Tier: `3`<br>Months: `6`<br>Assessment: `Y` | Tier: Complete Wellness<br>Monthly Fee: R480.00<br>Subtotal: R2880.00<br>Discount (12%): R345.60<br>Assessment Fee: R180.00<br>Final Total: R2714.40 | Matches Expected | **Pass** |
+| **TC 1.2** | Tier 2, 6-Month Commitment with Assessment *(Sample Output Verification)* | Student No: `VF1008`<br>Name: `Thapelo Gama`<br>Tier: `2`<br>Months: `6`<br>Assessment: `Y` | Tier: Active Plus<br>Monthly Fee: R350.00<br>Subtotal: R2100.00<br>Discount (12%): R252.00<br>Assessment Fee: R180.00<br>Final Total: R2028.00 | Matches Expected | **Pass** |
+| **TC 1.3** | 7% Discount Bracket Check (Tier 1, 3 Months, No Assessment) | Student No: `VF1015`<br>Name: `Sarah Adams`<br>Tier: `1`<br>Months: `3`<br>Assessment: `N` | Tier: Basic Access<br>Monthly Fee: R220.00<br>Subtotal: R660.00<br>Discount (7%): R46.20<br>Assessment Fee: R0.00<br>Final Total: R613.80 | Matches Expected | **Pass** |
+| **TC 1.4** | 0% Discount Bracket Check (Tier 2, 2 Months, No Assessment) | Student No: `VF1020`<br>Name: `John Doe`<br>Tier: `2`<br>Months: `2`<br>Assessment: `N` | Tier: Active Plus<br>Monthly Fee: R350.00<br>Subtotal: R700.00<br>Discount (0%): R0.00<br>Assessment Fee: R0.00<br>Final Total: R700.00 | Matches Expected | **Pass** |
+| **TC 1.5** | Invalid Tier Code Boundary Trapping (`code ∉ 1..3`) | Student No: `VF1030`<br>Name: `Jane Smith`<br>Tier: `4` | Error message: Invalid membership tier code.<br>Immediate program termination. | Matches Expected | **Pass** |
+| **TC 1.6** | Duration Boundary Trapping (`months > 6`) | Student No: `VF1035`<br>Name: `Mike Ross`<br>Tier: `1`<br>Months: `7` | Error message: Duration must be between 1 and 6 months.<br>Immediate program termination. | Matches Expected | **Pass** |
+    
