@@ -70,7 +70,7 @@ int main()
 		break;
 	default:
 		cout << "\nError: You have entered an invalid membership code ";
-		cout << "Successfully selected " << selectedMembershipPlanName << " at R" << initialMonthlyRate << "/month" << endl;
+		
 		return 0; 
 		
 
@@ -133,13 +133,10 @@ int main()
 	cout << "Monthly Fee\t\t:" << initialMonthlyRate << endl;
 	cout << "Subtotal\t\t:" << membershipSubtotal << endl;
 	cout << "Discount\t\t:" << discountAmount << endl;
-	cout << "Assessment\t\t:" << ASSESSMENT_FEE << endl;
+	cout << "Assessment\t\t:" << assessmentCharge << endl;
 	cout << "FINAL AMOUNT\t\t:" << fullAmountDue;
 
-	/*Used the \t escape character to format the quotation display*/
-
-
-	//cout << "final amount due: " << fullAmountDue; 
+	
 
 
 	
