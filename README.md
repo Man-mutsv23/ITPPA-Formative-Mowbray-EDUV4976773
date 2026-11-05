@@ -150,5 +150,132 @@ Press `Ctrl + Shift + B` to compile the project then `Ctrl +F5` to run it.
 
 5. The application displays an itemized quotation invoice and exits.
 
+### Question 2
+### Program Design & Testing
 
+#### 2.1 IPO Analysis (Input, Processing, Output)
+| Input | Processing | Output |
+| :--- | :--- | :--- |
+| • `bookingRef` (`string`)<br>• `sessionCode` (`int`)<br>• `participants` (`int`)<br>• `isSaturday` (`char`) | 1. Display session schedule via `displaySessionMenu()`.<br>2. Map rate and validate code via `getSessionRate(sessionCode)`:<br>&nbsp;&nbsp;&nbsp;&nbsp;• 1 = Yoga (R75), 2 = Strength (R110), 3 = Stress (R90).<br>3. Validate participants (1 to 12) via a loop using `validParticipants(participants)`.<br>4. Calculate subtotal via `calculateSubtotal(rate, participants)`.<br>5. Calculate 10% group discount for ≥ 8 participants via `calculateDiscount(subtotal, participants)`.<br>6. Calculate 15% weekend surcharge on discounted amount via `calculateWeekendSurcharge(amountAfterDiscount, isSaturday)`.<br>7. Calculate final total and cost per participant.<br>8. Output formatted receipt via `displayBookingSummary(...)`. | • Session rate schedule<br>• Range validation re-prompts<br>• Formatted Booking Summary:<br>&nbsp;&nbsp;– Booking Reference<br>&nbsp;&nbsp;– Session Name<br>&nbsp;&nbsp;– Number of Participants<br>&nbsp;&nbsp;– Subtotal (R)<br>&nbsp;&nbsp;– Group Discount (R)<br>&nbsp;&nbsp;– Weekend Surcharge (R)<br>&nbsp;&nbsp;– Final Total (R)<br>&nbsp;&nbsp;– Cost per Participant (R) |
+
+---
+
+#### 2.2 Test Execution Table
+| Test Case | Scenario / Logic Tested | Inputs | Expected Output | Actual Output | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC 2.1** | 10 Participants + Saturday *(Brief Minimum Test Case)* | Ref: `BK101`<br>Session: `2` (Strength, R110)<br>Participants: `10`<br>Saturday: `Y` | Subtotal: R1 100.00<br>Group Discount (10%): R110.00<br>Saturday Surcharge (15%): R148.50<br>Final Total: R1 138.50<br>Cost per Participant: R113.85 | Matches Expected | **Pass** |
+| **TC 2.2** | 2 Participants, Weekday *(Sample Output Verification)* | Ref: `BK204`<br>Session: `2` (Strength, R110)<br>Participants: `2`<br>Saturday: `N` | Subtotal: R220.00<br>Group Discount: R0.00<br>Weekend Surcharge: R0.00<br>Final Total: R220.00<br>Cost per Participant: R110.00 | Matches Expected | **Pass** |
+| **TC 2.3** | 8 Participants Boundary *(Exact 10% Discount Trigger)* | Ref: `BK308`<br>Session: `1` (Yoga, R75)<br>Participants: `8`<br>Saturday: `N` | Subtotal: R600.00<br>Group Discount (10%): R60.00<br>Weekend Surcharge: R0.00<br>Final Total: R540.00<br>Cost per Participant: R67.50 | Matches Expected | **Pass** |
+| **TC 2.4** | 7 Participants Boundary *(No Group Discount)* | Ref: `BK307`<br>Session: `1` (Yoga, R75)<br>Participants: `7`<br>Saturday: `N` | Subtotal: R525.00<br>Group Discount: R0.00<br>Weekend Surcharge: R0.00<br>Final Total: R525.00<br>Cost per Participant: R75.00 | Matches Expected | **Pass** |
+| **TC 2.5** | Single Participant Lower Bound (Session 3) | Ref: `BK401`<br>Session: `3` (Stress, R90)<br>Participants: `1`<br>Saturday: `N` | Subtotal: R90.00<br>Group Discount: R0.00<br>Weekend Surcharge: R0.00<br>Final Total: R90.00<br>Cost per Participant: R90.00 | Matches Expected | **Pass** |
+| **TC 2.6** | Invalid Participant Count Trapping (`< 1` or `> 12` Loop) | Ref: `BK500`<br>Session: `2`<br>Participants: `0`, then `15`, then `4`<br>Saturday: `N` | Displays error re-prompt repeatedly until valid. Accepts `4`.<br>Subtotal: R440.00, Surcharge: R0.00<br>Final Total: R440.00, Per Person: R110.00 | Matches Expected | **Pass** |
+
+### Question 3
+
+### 3.2 Question 3: Flowchart (Daily Student Check-In System)
+
+```mermaid
+graph TD
+    Start([Start]) --> Init["attempts = 0<br>validCheckIns = 0<br>invalidAttempts = 0<br>totalValidMinutes = 0<br>continueChoice = 'Y'"]
+    Init --> LoopCond{"attempts < 10 AND<br>continueChoice == 'Y'?"}
+    
+    LoopCond -- Yes --> IncAtt["attempts = attempts + 1"]
+    IncAtt --> Inp[/Input studentNumber, activityCode, duration/]
+    Inp --> ValCheck{"activityCode in [1..3] AND<br>duration in [15..180]?"}
+    
+    ValCheck -- Yes --> ValidProc["validCheckIns = validCheckIns + 1<br>totalValidMinutes += duration<br>Update Activity Counter (Gym/Class/Consult)"]
+    ValidProc --> CatCheck{"duration < 30?"}
+    CatCheck -- Yes --> ShortV[/Display 'SHORT VISIT'/]
+    CatCheck -- No --> CatCheck2{"duration <= 90?"}
+    CatCheck2 -- Yes --> StdV[/Display 'STANDARD VISIT'/]
+    CatCheck2 -- No --> ExtV[/Display 'EXTENDED VISIT'/]
+    
+    ShortV --> LongCheck{"duration >= 120?"}
+    StdV --> LongCheck
+    ExtV --> LongCheck
+    LongCheck -- Yes --> LongAlert[/Display 'LONG SESSION CHECK'/]
+    LongCheck -- No --> CheckTen
+    LongAlert --> CheckTen
+    
+    ValCheck -- No --> InvalProc["invalidAttempts = invalidAttempts + 1"]
+    InvalProc --> InvalAlert[/Display 'INVALID CHECK-IN'/]
+    InvalAlert --> CheckTen
+    
+    CheckTen{"attempts < 10?"}
+    CheckTen -- Yes --> AskCont[/Input continueChoice 'Y'/'N'/]
+    CheckTen -- No --> LoopCond
+    AskCont --> LoopCond
+    
+    LoopCond -- No --> ZeroCheck{"validCheckIns > 0?"}
+    ZeroCheck -- Yes --> CalcAve["averageDuration = totalValidMinutes / validCheckIns"]
+    ZeroCheck -- No --> ZeroAve["averageDuration = 0.00"]
+    CalcAve --> DispSum[/Display Formatted Daily Summary Report/]
+    ZeroAve --> DispSum
+    DispSum --> EndNode([End])
+```
+
+---
+
+
+#### 3.3 Participant Check-in Test Table
+| Test Case | Scenario / Logic Tested | Inputs | Expected Output | Actual Output | Pass / Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC 3.1** | Normal Valid Check-In (Gym Floor) | Student: `VF101`<br>Activity: `1`<br>Duration: `60`<br>Continue: `N` | Valid Check-Ins: 1<br>Total Mins: 60<br>Gym Floor: 1<br>Average: 60.00 mins | Matches Expected | **Pass** |
+| **TC 3.2** | Short Visit Boundary (< 30 mins) | Student: `VF102`<br>Activity: `2`<br>Duration: `20`<br>Continue: `N` | Status: `SHORT VISIT`<br>Valid Check-Ins: 1<br>Group Class: 1<br>Average: 20.00 mins | Matches Expected | **Pass** |
+| **TC 3.3** | Long Session Check Warning (≥ 120 mins) | Student: `VF103`<br>Activity: `3`<br>Duration: `125`<br>Continue: `N` | Status: `LONG SESSION CHECK`<br>Valid Check-Ins: 1<br>Consultations: 1<br>Average: 125.00 mins | Matches Expected | **Pass** |
+| **TC 3.4** | Invalid Activity Code Trapping (∉ 1..3) | Student: `VF104`<br>Activity: `4`<br>Duration: `45`<br>Continue: `N` | Status: `INVALID CHECK-IN`<br>Invalid Attempts: 1<br>Valid Check-Ins: 0<br>Average: 0.00 mins | Matches Expected | **Pass** |
+| **TC 3.5** | Duration Boundary Trapping (< 15 or > 180 mins) | Student: `VF105`<br>Activity: `1`<br>Duration: `10`<br>Continue: `N` | Status: `INVALID CHECK-IN`<br>Invalid Attempts: 1<br>Valid Check-Ins: 0<br>Average: 0.00 mins | Matches Expected | **Pass** |
+| **TC 3.6** | Loop Cap Termination (10 Attempts Reached) | 10 consecutive entries with Continue: `Y` | System terminates loop automatically after 10th check-in without prompting; prints Daily Summary Report. | Matches Expected | **Pass** |
+
+### Question 4
+
+### Program Design & Testing
+
+#### 4.1 IPO Analysis (Input, Processing, Output)
+| Input | Processing | Output |
+| :--- | :--- | :--- |
+| • `programmes[3]` (`string` 1D array)<br>&nbsp;&nbsp;*("Yoga", "Strength", "Wellness Workshop")*<br>• `days[5]` (`string` 1D array)<br>&nbsp;&nbsp;*("Mon", "Tue", "Wed", "Thu", "Fri")*<br>• `attendance[3][5]` (`int` 2D array)<br>&nbsp;&nbsp;*(Pre-populated 3×5 attendance matrix)* | 1. Initialize and pre-populate arrays.<br>2. Traverse 2D array using nested `for` loops:<br>&nbsp;&nbsp;&nbsp;&nbsp;• Calculate row totals and averages (`rowTotal / 5.0`).<br>&nbsp;&nbsp;&nbsp;&nbsp;• Find the highest attendance day and count per programme.<br>&nbsp;&nbsp;&nbsp;&nbsp;• Identify entries where `attendance >= 40`, flag with `"HIGH DEMAND"`, and increment counter.<br>3. Calculate column totals across all programmes for each weekday.<br>4. Determine the busiest weekday (highest daily total).<br>5. Determine the top programme (highest weekly total).<br>6. Calculate grand total across all 15 cells and overall average (`grandTotal / 15.0`). | • Formatted Weekly Analytics Grid:<br>&nbsp;&nbsp;– Daily counts by programme<br>&nbsp;&nbsp;– `"HIGH DEMAND"` indicators<br>&nbsp;&nbsp;– Row totals and averages<br>&nbsp;&nbsp;– Highest day per programme<br>• Weekday summary totals (Mon–Fri)<br>• Summary Metrics:<br>&nbsp;&nbsp;– Busiest weekday and total<br>&nbsp;&nbsp;– Top programme and total<br>&nbsp;&nbsp;– Total `HIGH DEMAND` values count<br>&nbsp;&nbsp;– Grand total attendance<br>&nbsp;&nbsp;– Overall average attendance |
+
+---
+
+### 4.2 Question 4: Flowchart (Attendance Analytics)
+
+```mermaid
+graph TD
+    Start([Start]) --> Init["Populate programmes[3], days[5], attendance[3][5]<br>grandTotal = 0<br>highDemandCount = 0<br>Initialize dayTotals[5] to 0"]
+    
+    Init --> RowLoopInit["p = 0"]
+    RowLoopInit --> RowCond{"p < 3?"}
+    
+    RowCond -- Yes --> RowStart["rowTotal = 0<br>maxDayAttendance = 0<br>d = 0"]
+    RowStart --> ColCond{"d < 5?"}
+    
+    ColCond -- Yes --> AddAccum["val = attendance[p][d]<br>rowTotal += val<br>dayTotals[d] += val<br>grandTotal += val"]
+    AddAccum --> MaxCheck{"val > maxDayAttendance?"}
+    MaxCheck -- Yes --> UpdateMax["maxDayAttendance = val<br>highestDayIndex = d"]
+    MaxCheck -- No --> DemandCheck
+    UpdateMax --> DemandCheck
+    
+    DemandCheck{"val >= 40?"}
+    DemandCheck -- Yes --> FlagDemand["highDemandCount = highDemandCount + 1<br>Tag 'HIGH DEMAND'"]
+    DemandCheck -- No --> IncCol
+    FlagDemand --> IncCol
+    
+    IncCol["d = d + 1"] --> ColCond
+    
+    ColCond -- No --> RowSummary["rowAverage = rowTotal / 5.0<br>Store Programme Performance Metrics"]
+    RowSummary --> IncRow["p = p + 1"]
+    IncRow --> RowCond
+    
+    RowCond -- No --> FindBusiest["Scan dayTotals[5] to find Busiest Weekday<br>Scan rowTotals[3] to find Top Programme<br>overallAverage = grandTotal / 15.0"]
+    FindBusiest --> OutputGrid[/Display 3x5 Weekly Analytics Grid & Summary Breakdown/]
+    OutputGrid --> EndNode([End])
+```
+#### 4.3 Mandatory 4-Row Test Table
+| Test Case | Scenario / Logic Tested | Inputs | Expected Output | Actual Output | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **TC 4.1** | **Normal Test:** Standard 3×5 Matrix Execution *(Prescribed Data)* | Pre-populated 3×5 matrix:<br>• Yoga: 24, 31, 28, 35, 30<br>• Strength: 38, 42, 36, 45, 41<br>• Wellness: 18, 22, 25, 20, 27 | Row Totals/Avgs:<br>– Yoga: 148 (Avg 29.60)<br>– Strength: 202 (Avg 40.40)<br>– Wellness: 112 (Avg 22.40)<br>Grand Total: 462, Overall Avg: 30.80<br>High Demand Count: 3 | Matches Expected | **Pass** |
+| **TC 4.2** | **Boundary Test:** HIGH DEMAND Threshold (`attendance >= 40`) | Matrix boundary values:<br>• Strength Mon: 38 (`< 40`)<br>• Strength Tue: 42 (`> 40`)<br>• Test value set to exactly 40 | Values ≥ 40 append HIGH DEMAND label.<br>Value 38 displays no label.<br>Value 40 triggers HIGH DEMAND label and increments counter. | Matches Expected | **Pass** |
+| **TC 4.3** | **Changed-Data Test:** Verification of Dynamic Loop Accumulation | Modified test matrix:<br>• Yoga Mon updated: 24 → 50<br>• All other values unchanged | Yoga Total updates to 174 (Avg 34.80)<br>Mon Day Total updates to 106<br>Grand Total updates to 488 (Overall Avg 32.53)<br>High Demand Count updates to 4 | Matches Expected | **Pass** |
+| **TC 4.4** | **Logic Test:** Highest Programme Day & Busiest Weekday Determination | Traversal across rows and columns of standard matrix | Highest Days:<br>– Yoga: Thu (35)<br>– Strength: Thu (45)<br>– Wellness: Fri (27)<br>Busiest Weekday: Thu (100)<br>Top Programme: Strength (202) | Matches Expected | **Pass** |
  
