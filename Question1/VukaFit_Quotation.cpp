@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <iomanip>
 
 using namespace std; 
 
@@ -125,16 +126,17 @@ int main()
 	//Final amount 
 	fullAmountDue = membershipSubtotal - discountAmount + assessmentCharge;
 
+	cout << fixed << setprecision(2);
 	//The invoice display
 	cout << "=======================VUKAFIT MEMBERSHIP QUOTATION=========================="<<endl;
 	cout << "Student\t\t\t:" << studentName << " -" << studentNumber << endl;
 	cout << "Membership\t\t:" << selectedMembershipPlanName<<endl;
 	cout << "Months\t\t\t:" << membershipDuration << endl;
-	cout << "Monthly Fee\t\t:" << initialMonthlyRate << endl;
-	cout << "Subtotal\t\t:" << membershipSubtotal << endl;
-	cout << "Discount\t\t:" << discountAmount << endl;
-	cout << "Assessment\t\t:" << assessmentCharge << endl;
-	cout << "FINAL AMOUNT\t\t:" << fullAmountDue;
+	cout << "Monthly Fee\t\t:R" << initialMonthlyRate << endl;
+	cout << "Subtotal\t\t:R" << membershipSubtotal << endl;
+	cout << "Discount\t\t:R" << discountAmount << endl;
+	cout << "Assessment\t\t:R" << assessmentCharge << endl;
+	cout << "FINAL AMOUNT\t\t:R" << fullAmountDue;
 
 	
 

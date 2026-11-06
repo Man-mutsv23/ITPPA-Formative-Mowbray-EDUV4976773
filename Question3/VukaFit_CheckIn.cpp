@@ -41,7 +41,8 @@ int main(){
 
         attempts++;
 
-        cout << "\nPlease enter your student number: ";
+        
+        cout << "Hello and welcome to the VukaFit Check-In Page!\nPlease enter your student number: ";
         cin >> studentNumber;
 
         cout << "Please enter your desired activity code(1=Gym, 2=Group Class, 3=Consultation): " << endl;
