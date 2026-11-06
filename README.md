@@ -148,11 +148,4 @@ Press `Ctrl + Shift + B` to compile the project then `Ctrl +F5` to run it.
 5. The application displays an itemized quotation invoice and exits.
 
 
-| Test Case | Scenario / Logic Tested | Inputs | Expected Output | Actual Output | Pass / Fail |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **TC 3.1** | Normal Valid Check-In (Gym Floor) | Student: `VF101`<br>Activity: `1`<br>Duration: `60`<br>Continue: `N` | Valid Check-Ins: 1<br>Total Mins: 60<br>Gym Floor: 1<br>Average: 60.00 mins | Matches Expected | **Pass** |
-| **TC 3.2** | Short Visit Boundary (< 30 mins) | Student: `VF102`<br>Activity: `2`<br>Duration: `20`<br>Continue: `N` | Status: `SHORT VISIT`<br>Valid Check-Ins: 1<br>Group Class: 1<br>Average: 20.00 mins | Matches Expected | **Pass** |
-| **TC 3.3** | Long Session Check Warning (≥ 120 mins) | Student: `VF103`<br>Activity: `3`<br>Duration: `125`<br>Continue: `N` | Status: `LONG SESSION CHECK`<br>Valid Check-Ins: 1<br>Consultations: 1<br>Average: 125.00 mins | Matches Expected | **Pass** |
-| **TC 3.4** | Invalid Activity Code Trapping (∉ 1..3) | Student: `VF104`<br>Activity: `4`<br>Duration: `45`<br>Continue: `N` | Status: `INVALID CHECK-IN`<br>Invalid Attempts: 1<br>Valid Check-Ins: 0<br>Average: 0.00 mins | Matches Expected | **Pass** |
-| **TC 3.5** | Duration Boundary Trapping (< 15 or > 180 mins) | Student: `VF105`<br>Activity: `1`<br>Duration: `10`<br>Continue: `N` | Status: `INVALID CHECK-IN`<br>Invalid Attempts: 1<br>Valid Check-Ins: 0<br>Average: 0.00 mins | Matches Expected | **Pass** |
-| **TC 3.6** | Loop Cap Termination (10 Attempts Reached) | 10 consecutive entries with Continue: `Y` | System terminates loop automatically after 10th check-in without prompting; prints Daily Summary Report. | Matches Expected | **Pass** |
+ 
